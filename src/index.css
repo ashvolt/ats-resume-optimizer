@@ -1,0 +1,51 @@
+/* Claude design-system tokens approximated for local dev */
+:root {
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #555;
+  --color-text-tertiary: #888;
+  --color-text-info: #185fa5;
+  --color-text-success: #0f6e56;
+  --color-text-danger: #993c1d;
+
+  --color-background-primary: #fff;
+  --color-background-secondary: #f3f4f6;
+  --color-background-info: #e6f1fb;
+  --color-background-success: #e1f5ee;
+  --color-background-danger: #faece7;
+
+  --color-border-tertiary: #e5e7eb;
+  --color-border-secondary: #d1d5db;
+  --color-border-info: #bfdbfe;
+  --color-border-danger: #fca5a5;
+
+  --border-radius-md: 6px;
+  --border-radius-lg: 10px;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #f9fafb;
+  font-family: var(--font-sans);
+}
+
+input, textarea, button {
+  font-family: var(--font-sans);
+}
+
+input, textarea {
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 8px 10px;
+  outline: none;
+  background: #fff;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--color-text-info);
+  box-shadow: 0 0 0 2px rgba(24, 95, 165, 0.12);
+}
