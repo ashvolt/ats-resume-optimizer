@@ -1,3 +1,5 @@
+> **Superseded.** This document describes the v0.1 prototype's internal fixes (tokenizer, section weighting, injection templates). It is retained for historical context and reconciled into the new spec. The deterministic engine plan (Phase 1-2 below) still stands as the design for the v1 ATS engine's rule-based core — see [`docs/features/ats-engine.md`](docs/features/ats-engine.md) and [`docs/decisions/ADR-004.md`](docs/decisions/ADR-004.md). Phase 4 (modularization) is superseded by [`docs/architecture.md`](docs/architecture.md). Current architecture and requirements live in [`docs/`](docs/).
+
 # Development Plan — ATS Resume Optimizer
 
 **Status:** v0.1 (prototype) → v1.0 (production-ready)  

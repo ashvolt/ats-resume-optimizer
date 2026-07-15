@@ -3,6 +3,7 @@
 // Intelligence: sentence-aware tokenizer, JD section weighting, tech-term
 //               whitelist, noise filter, category-aware injection, typed templates
 import { useState } from "react";
+import { extractProxyContents, extractReadableJDText } from "./src/scraper.js";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  CONSTANTS
@@ -410,6 +411,7 @@ function adaptResume(resumeText, missingKws) {
 // ═══════════════════════════════════════════════════════════════════════════════
 const PROXIES = [
   url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+  url => `https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`,
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
 ];
 
@@ -437,27 +439,31 @@ async function scrapeURL(url, timeout = 10000) {
       const resp = await fetch(makeProxy(url), { signal: ctrl.signal });
       clearTimeout(timer);
       if (!resp.ok) { lastError = `HTTP ${resp.status}`; continue; }
-      const data = await resp.json();
-      const contents = data.contents || data.body || "";
+
+      const text = await resp.text();
+      const contents = extractProxyContents(text, resp.headers.get("content-type") || "");
       if (!contents || contents.length < 200) { lastError = "Empty response"; continue; }
 
-      // Parse HTML
-      const doc = new DOMParser().parseFromString(contents, "text/html");
-      ["script", "style", "nav", "footer", "header", "aside", "form"].forEach(t =>
-        doc.querySelectorAll(t).forEach(el => el.remove())
-      );
+      const looksLikeHtml = /<\/?[a-z][\s\S]*>/i.test(contents);
+      if (looksLikeHtml) {
+        const doc = new DOMParser().parseFromString(contents, "text/html");
+        ["script", "style", "nav", "footer", "header", "aside", "form"].forEach(t =>
+          doc.querySelectorAll(t).forEach(el => el.remove())
+        );
 
-      // Try selectors in priority order
-      for (const sel of JD_SELECTORS) {
-        const el = doc.querySelector(sel);
-        if (el?.textContent?.trim().length > 300) {
-          return cleanJDText(el.textContent);
+        for (const sel of JD_SELECTORS) {
+          const el = doc.querySelector(sel);
+          if (el?.textContent?.trim().length > 300) {
+            return cleanJDText(el.textContent);
+          }
         }
+
+        const bodyText = doc.body?.textContent || "";
+        if (bodyText.trim().length > 200) return cleanJDText(bodyText);
       }
 
-      // Fallback to body
-      const bodyText = doc.body?.textContent || "";
-      if (bodyText.trim().length > 200) return cleanJDText(bodyText);
+      const readableText = extractReadableJDText(contents);
+      if (readableText.length > 200) return cleanJDText(readableText);
 
       lastError = "No job content found in page";
     } catch (e) {

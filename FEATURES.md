@@ -1,3 +1,5 @@
+> **Superseded.** This is the v0.1 prototype's feature list. The v1 spec lives in [`docs/features/`](docs/features/), with `docs/requirements.md` as the canonical functional requirements doc. Retained for historical reference and status comparison.
+
 # Features
 
 Complete feature specification for the ATS Resume Optimizer.  
