@@ -6,3 +6,4 @@ export * from "./extract-keywords";
 export * from "./flatten";
 export * from "./formatting-hazards";
 export * from "./score";
+export * from "./ai-layer";

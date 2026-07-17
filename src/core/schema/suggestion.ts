@@ -26,6 +26,13 @@ export interface Suggestion {
   status: SuggestionStatus;
   createdAt: string;
   resolvedAt?: string;
+  /**
+   * Terms in `proposed` that don't appear anywhere in the source resume — the honesty backstop
+   * from docs/features/resume-editor.md's "keyword introduced from nowhere" acceptance criterion.
+   * Non-empty only for AI suggestions; the UI must flag these for extra scrutiny, never present
+   * them identically to a substantiated rewrite (FR-OPT-5).
+   */
+  flaggedTerms?: string[];
 }
 
 export type VersionTrigger =
